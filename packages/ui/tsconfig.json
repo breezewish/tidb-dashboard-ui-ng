@@ -1,0 +1,5 @@
+// This is a tsconfig for development environment
+{
+  "include": ["src/**/*", "webpack.config.ts"],
+  "extends": "../../tsconfig.json"
+}

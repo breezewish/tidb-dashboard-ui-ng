@@ -1,0 +1,22 @@
+{
+  "name": "@tidb-dashboard/core",
+  "description": "TiDB Dashboard core and utilities.",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Breezewish <me@breeswish.org>",
+  "license": "MIT",
+  "main": "build/index.js",
+  "dependencies": {
+    "@tidb-dashboard/shared-libraries": "^0.0.0",
+    "eventemitter2": "^6.4.3",
+    "i18next": "^19.7.0",
+    "i18next-browser-languagedetector": "^6.0.1",
+    "react-i18next": "^11.7.2"
+  },
+  "devDependencies": {
+    "@tidb-dashboard/build-scripts": "^0.0.0"
+  },
+  "peerDependencies": {
+    "react": "*"
+  }
+}

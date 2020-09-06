@@ -1,0 +1,16 @@
+{
+  "name": "@tidb-dashboard/ui",
+  "description": "TiDB Dashboard React UI components.",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Breezewish <me@breeswish.org>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@tidb-dashboard/shared-libraries": "^0.0.0",
+    "@tidb-dashboard/core": "^0.0.0"
+  },
+  "devDependencies": {
+    "@tidb-dashboard/build-scripts": "^0.0.0"
+  }
+}

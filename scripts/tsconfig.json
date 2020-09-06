@@ -1,0 +1,4 @@
+{
+  "include": ["webpack/**/*"],
+  "extends": "../tsconfig.json"
+}

@@ -1,0 +1,5 @@
+{
+  "antd$": "antd/dist/antd",
+  "axios": "axios/dist/axios",
+  "d3": "d3/dist/d3"
+}

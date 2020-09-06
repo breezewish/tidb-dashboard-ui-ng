@@ -1,0 +1,4 @@
+{
+  "include": ["index.ts"],
+  "extends": "@tidb-dashboard/build-scripts/tsconfig.base.json"
+}
