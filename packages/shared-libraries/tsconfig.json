@@ -1,4 +1,5 @@
+// This is a tsconfig for development environment
 {
-  "include": ["index.ts"],
-  "extends": "@tidb-dashboard/build-scripts/tsconfig.base.json"
+  "include": ["src/**/*", "webpack.config.ts"],
+  "extends": "../../tsconfig.json"
 }

@@ -7,7 +7,8 @@
   },
   "devDependencies": {
     "lerna": "^3.22.1",
-    "wsrun": "^5.2.1"
+    "wsrun": "^5.2.1",
+    "rimraf": "^3.0.2"
   },
   "workspaces": [
     "packages/*",
@@ -16,6 +17,7 @@
     "scripts"
   ],
   "scripts": {
-    "clean": "wsrun -a rimraf build"
+    "clean": "wsrun -a rimraf build",
+    "build:dev": "wsrun -x @tidb-dashboard/build-scripts -s -e -c webpack --config webpack.config.ts --progress --env development"
   }
 }

@@ -8,6 +8,8 @@ import prodConfig from './prod.config'
 
 export type WebpackEnv = 'development' | 'production'
 
+export const ROOT_DIR = path.resolve(__dirname, '../../')
+
 export function getCssLoaders(env: WebpackEnv, options?: any) {
   return [
     {
@@ -101,7 +103,7 @@ export function buildSharedLibraryConfig(
     resolve: {
       alias: {
         ...requireAtPlace(
-          '@tidb-dashboard/shared-libraries/src/libraries-aliases.json'
+          '@tidb-dashboard/shared-libraries/src/libraries-alias.json'
         ),
       },
     },

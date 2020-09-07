@@ -15,8 +15,5 @@
   },
   "devDependencies": {
     "@tidb-dashboard/build-scripts": "^0.0.0"
-  },
-  "peerDependencies": {
-    "react": "*"
   }
 }

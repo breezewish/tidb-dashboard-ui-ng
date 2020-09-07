@@ -12,6 +12,7 @@
     "axios": "^0.20.0",
     "d3": "^6.1.1",
     "dayjs": "^1.8.35",
+    "history": "^5.0.0",
     "lodash": "^4.17.20",
     "office-ui-fabric-react": "^7.133.1",
     "react": "^16.13.1",
@@ -25,7 +26,6 @@
     "@types/d3": "^5.7.2",
     "@types/lodash": "^4.14.161",
     "@types/react": "^16.9.49",
-    "@types/react-dom": "^16.9.8",
-    "generate-file-webpack-plugin": "^1.0.1"
+    "@types/react-dom": "^16.9.8"
   }
 }

@@ -7,11 +7,15 @@
   "main": "dist/index.js",
   "dependencies": {
     "@tidb-dashboard/core": "^0.0.0",
+    "@tidb-dashboard/shared-libraries": "^0.0.0",
     "@tidb-dashboard/ui": "^0.0.0",
-    "nprogress": "^0.2.0"
+    "nprogress": "^0.2.0",
+    "systemjs": "^6.5.1"
   },
   "devDependencies": {
     "@tidb-dashboard/build-scripts": "^0.0.0",
+    "@types/copy-webpack-plugin": "^6.0.0",
+    "copy-webpack-plugin": "^6.1.0",
     "html-webpack-plugin": "^4.4.1",
     "html-webpack-tags-plugin": "^2.0.17"
   }

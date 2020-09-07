@@ -1,6 +1,5 @@
 export { default as i18next } from 'i18next'
 export { useTranslation } from 'react-i18next'
-export * as SingleSpa from 'single-spa'
 
 export * as I18N from './i18n'
 export * as Registry from './registry'

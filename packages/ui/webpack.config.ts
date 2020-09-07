@@ -12,12 +12,11 @@ function libraryConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
     webpackUtils.buildSharedLibraryConfig(__filename),
     {
       entry: {
-        index: './src',
+        main: './src',
       },
       output: {
         path: path.join(__dirname, 'build/lib'),
         filename: 'ui.js',
-        library: '@tidb-dashboard/ui',
         libraryTarget: 'system',
       },
       externalsType: 'system',

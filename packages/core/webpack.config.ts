@@ -8,12 +8,8 @@ export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
     webpackUtils.buildCommonConfig(env, __filename),
     webpackUtils.buildSharedLibraryConfig(__filename),
     {
-      entry: {
-        index: './src',
-      },
       output: {
         filename: 'core.js',
-        library: '@tidb-dashboard/core',
         libraryTarget: 'system',
       },
       plugins: [
