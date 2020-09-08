@@ -12,15 +12,14 @@ function libraryConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
     webpackUtils.buildSharedLibraryConfig(__filename),
     {
       entry: {
-        main: './src',
+        ui: './src',
       },
       output: {
         path: path.join(__dirname, 'build/lib'),
-        filename: 'ui.js',
-        libraryTarget: 'system',
       },
-      externalsType: 'system',
-      externals: ['@tidb-dashboard/core'],
+      externals: {
+        '@tidb-dashboard/core': { amd: '@tidb-dashboard/core' },
+      },
       plugins: [
         new ManifestPlugin({
           fileName: 'manifest.ui_lib.json',
@@ -63,10 +62,6 @@ function styleConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
         fileName: 'manifest.ui_styles.json',
       }),
     ],
-    cache:
-      env === 'production'
-        ? false
-        : webpackUtils.getFileSystemCacheConfig(__filename),
   }
 }
 

@@ -4,7 +4,7 @@ import { Registry } from '@tidb-dashboard/core'
 import { useEffect, useState } from 'react'
 
 export interface IAppRegistryRootProps {
-  registry: Registry.AppRegistry
+  registry: any //Registry.AppRegistry
 }
 
 export function App({ registry }: IAppRegistryRootProps) {

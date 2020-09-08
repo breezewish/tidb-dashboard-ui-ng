@@ -12,9 +12,6 @@ export default function (
   const dirName = path.dirname(currentFilePath)
   return {
     context: dirName,
-    entry: {
-      main: './src',
-    },
     output: {
       path: path.join(dirName, 'build'),
     },
@@ -80,6 +77,11 @@ export default function (
           ],
         },
       ],
+    },
+    optimization: {
+      runtimeChunk: {
+        name: 'runtime',
+      },
     },
     plugins: [
       new ESBuildPlugin(),

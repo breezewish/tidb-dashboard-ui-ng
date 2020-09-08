@@ -5,8 +5,11 @@ import {
   DownOutlined,
   RightOutlined,
 } from '@ant-design/icons'
-import { createTheme, registerIcons } from 'office-ui-fabric-react/lib/Styling'
-import { Customizations } from 'office-ui-fabric-react/lib/Utilities'
+import {
+  Customizations,
+  createTheme,
+  registerIcons,
+} from 'office-ui-fabric-react'
 import { ConfigProvider } from 'antd'
 import { useTranslation } from '@tidb-dashboard/core'
 import enUS from 'antd/es/locale/en_US'

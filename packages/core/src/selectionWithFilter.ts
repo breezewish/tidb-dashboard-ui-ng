@@ -7,7 +7,7 @@ import {
   ISelectionOptionsWithRequiredGetKey,
   EventGroup,
   SELECTION_CHANGE,
-} from 'office-ui-fabric-react/lib/Utilities'
+} from 'office-ui-fabric-react'
 
 export default class SelectionWithFilter<T = IObjectWithKey>
   implements ISelection<T> {

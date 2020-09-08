@@ -8,9 +8,8 @@ export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
     webpackUtils.buildCommonConfig(env, __filename),
     webpackUtils.buildSharedLibraryConfig(__filename),
     {
-      output: {
-        filename: 'core.js',
-        libraryTarget: 'system',
+      entry: {
+        core: './src',
       },
       plugins: [
         new ManifestPlugin({

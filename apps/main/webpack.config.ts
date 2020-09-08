@@ -7,17 +7,42 @@ import CopyPlugin from 'copy-webpack-plugin'
 import * as webpackUtils from '@tidb-dashboard/build-scripts/webpack/utils'
 import { ROOT_DIR } from '@tidb-dashboard/build-scripts/webpack/utils'
 
-export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
-  const manifestSharedLibrary = require('@tidb-dashboard/shared-libraries/build/manifest.shared-libraries.json')
-  const manifestCore = require('@tidb-dashboard/core/build/manifest.core.json')
-  const manifestUiLib = require('@tidb-dashboard/ui/build/lib/manifest.ui_lib.json')
-  const manifestUiStyles = require('@tidb-dashboard/ui/build/styles/manifest.ui_styles.json')
+function generateImportMapImports() {
+  const sharedLibraryImports = Object.fromEntries(
+    Object.entries(
+      require('@tidb-dashboard/shared-libraries/build/manifest.shared-libraries.json')
+    )
+      .map(([name, path]) => {
+        if (!name.endsWith('.js')) {
+          return false
+        }
+        return [name.replace(/\.js$/, ''), './' + path]
+      })
+      .filter(Boolean) as [string, string][]
+  )
+  return {
+    ...sharedLibraryImports,
+    '@tidb-dashboard/core':
+      './' +
+      require('@tidb-dashboard/core/build/manifest.core.json')['core.js'],
+    '@tidb-dashboard/ui':
+      './' +
+      require('@tidb-dashboard/ui/build/lib/manifest.ui_lib.json')['ui.js'],
+  }
+}
 
+export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
   return merge(
     webpackUtils.buildCommonConfig(env, __filename),
     webpackUtils.buildSharedLibraryConfig(__filename),
     webpackUtils.buildBaseLibraryConfig(),
     {
+      entry: {
+        app: './src',
+      },
+      output: {
+        library: 'app',
+      },
       plugins: [
         new CopyPlugin({
           patterns: [
@@ -25,7 +50,7 @@ export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
               context: path.dirname(
                 require.resolve('systemjs/dist/system.min.js')
               ),
-              from: 'system.min.*',
+              from: '**/*',
             },
             {
               context: `${ROOT_DIR}/packages/shared-libraries/build`,
@@ -48,16 +73,18 @@ export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
         new HtmlWebpackTagsPlugin({
           append: false,
           tags: [
-            'system.min.js',
-            manifestSharedLibrary['main.js'],
-            manifestCore['main.js'],
-            manifestUiLib['main.js'],
-            manifestUiStyles['light.css'],
-            // manifestUiStyles['dark.css'],
+            'system.js',
+            'extras/named-register.js',
+            'extras/amd.js',
+            // manifestUiStyles['light.css'],
           ],
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
+          templateParameters: {
+            imports: generateImportMapImports(),
+          },
+          inject: false,
           ...(env === 'production' && {
             minify: {
               removeComments: true,
@@ -76,4 +103,6 @@ export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
       ],
     }
   )
+
+  // return {}
 }

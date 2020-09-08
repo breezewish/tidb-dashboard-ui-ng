@@ -100,35 +100,31 @@ export function buildSharedLibraryConfig(
 ): webpack.Configuration {
   const requireAtPlace = createRequire(currentFilePath)
   return {
+    output: {
+      libraryTarget: 'amd',
+    },
     resolve: {
       alias: {
         ...requireAtPlace(
-          '@tidb-dashboard/shared-libraries/src/libraries-alias.json'
+          '@tidb-dashboard/shared-libraries/libraries-alias.json'
         ),
       },
     },
-    plugins: [
-      new webpack.container.ModuleFederationPlugin({
-        shared: Object.fromEntries(
-          requireAtPlace(
-            '@tidb-dashboard/shared-libraries/src/libraries.json'
-          ).map((name) => [
-            name,
-            {
-              import: false,
-              requiredVersion: false,
-              singleton: true,
-            },
-          ])
-        ),
-      }),
-    ],
+    externals: Object.fromEntries(
+      requireAtPlace(
+        '@tidb-dashboard/shared-libraries/libraries.json'
+      ).map((p) => [p, p])
+    ),
   }
 }
 
 export function buildBaseLibraryConfig(): webpack.Configuration {
   return {
-    externalsType: 'system',
-    externals: ['@tidb-dashboard/core', '@tidb-dashboard/ui'],
+    output: {
+      libraryTarget: 'amd',
+    },
+    externals: Object.fromEntries(
+      ['@tidb-dashboard/core', '@tidb-dashboard/ui'].map((p) => [p, p])
+    ),
   }
 }

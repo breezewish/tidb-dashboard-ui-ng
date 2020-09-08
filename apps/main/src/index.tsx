@@ -6,6 +6,12 @@ import { DefaultAppRegistry } from '@tidb-dashboard/core'
 import NProgress from 'nprogress'
 import './nprogress.less'
 
+window['React2'] = React
+
+debugger
+
+console.log(window['React1'] === window['React2'])
+
 function removeSpinner() {
   const spinner = document.getElementById('dashboard_page_spinner')
   if (spinner) {
