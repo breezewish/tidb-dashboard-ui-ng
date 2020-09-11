@@ -1,19 +1,19 @@
-import React from 'react'
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
   DownOutlined,
   RightOutlined,
 } from '@ant-design/icons'
+import { ConfigProvider } from 'antd'
+import enUS from 'antd/es/locale/en_US'
+import zhCN from 'antd/es/locale/zh_CN'
 import {
   Customizations,
   createTheme,
   registerIcons,
 } from 'office-ui-fabric-react'
-import { ConfigProvider } from 'antd'
+import React from 'react'
 import { useTranslation } from '@tidb-dashboard/core'
-import enUS from 'antd/es/locale/en_US'
-import zhCN from 'antd/es/locale/zh_CN'
 
 registerIcons({
   icons: {

@@ -1,11 +1,11 @@
 import path from 'path'
 import webpack from 'webpack'
 import { ESBuildPlugin } from 'esbuild-loader'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import WebpackBar from 'webpackbar'
 import * as utils from './utils'
 
-export default function (
+export default function sharedConfig(
   env: utils.WebpackEnv,
   currentFilePath: string
 ): webpack.Configuration {
@@ -17,6 +17,11 @@ export default function (
     },
     resolve: {
       extensions: ['.js', '.json', '.ts', '.tsx', '.js', '.jsx'],
+      alias: {
+        '@core': path.resolve(utils.ROOT_DIR, 'packages/core/src'),
+        '@ui': path.resolve(utils.ROOT_DIR, 'packages/ui/src'),
+        '@': path.join(dirName, 'src'),
+      },
     },
     module: {
       rules: [
@@ -78,19 +83,6 @@ export default function (
         },
       ],
     },
-    optimization: {
-      runtimeChunk: {
-        name: 'runtime',
-      },
-    },
-    plugins: [
-      new ESBuildPlugin(),
-      new ForkTsCheckerWebpackPlugin(),
-      new CleanWebpackPlugin(),
-      new webpack.IgnorePlugin({
-        contextRegExp: /moment$/,
-        resourceRegExp: /^\.\/locale$/,
-      }),
-    ],
+    plugins: [new ESBuildPlugin(), new CleanWebpackPlugin(), new WebpackBar()],
   }
 }

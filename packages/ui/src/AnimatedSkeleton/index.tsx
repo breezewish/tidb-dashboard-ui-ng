@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import cx from 'classnames'
 import { Skeleton } from 'antd'
 import type { SkeletonProps } from 'antd/es/skeleton'
+import cx from 'classnames'
+import React, { useEffect, useState } from 'react'
 import { AppearAnimate } from '..'
-
 import styles from './index.module.less'
 
 export interface IAnimatedSkeletonProps extends SkeletonProps {

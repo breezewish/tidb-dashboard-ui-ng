@@ -2,7 +2,7 @@ import path from 'path'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
 import { createRequire } from 'module'
-import buildCommonShredConfig from './shared.config'
+import buildCommonSharedConfig from './shared.config'
 import devConfig from './dev.config'
 import prodConfig from './prod.config'
 
@@ -68,17 +68,25 @@ export function getLessLoaders(env: WebpackEnv): any[] {
   })
 }
 
-export function getFileSystemCacheConfig(
-  currentFilePath,
+export function buildFSCacheConfig(
+  env: WebpackEnv,
+  currentFilePath: string,
   additionalDependencies?: any
-): webpack.Configuration['cache'] {
-  return {
+): webpack.Configuration {
+  const requireAtPlace = createRequire(currentFilePath)
+  const cacheConfig: webpack.Configuration['cache'] = {
     type: 'filesystem',
     buildDependencies: {
       sharedBuildScript: [__dirname + path.sep],
       config: [currentFilePath],
+      sharedLibraryExterns: [
+        requireAtPlace.resolve('@tidb-dashboard/shared-libraries/externs.json'),
+      ],
       ...additionalDependencies,
     },
+  }
+  return {
+    cache: env === 'production' ? false : cacheConfig,
   }
 }
 
@@ -87,44 +95,64 @@ export function buildCommonConfig(
   currentFilePath: string
 ): webpack.Configuration {
   if (env === 'development') {
-    return merge(devConfig, buildCommonShredConfig(env, currentFilePath))
+    return merge(devConfig, buildCommonSharedConfig(env, currentFilePath))
   } else if (env === 'production') {
-    return merge(prodConfig, buildCommonShredConfig(env, currentFilePath))
+    return merge(prodConfig, buildCommonSharedConfig(env, currentFilePath))
   } else {
     throw new Error('Expect env to be development or production')
   }
 }
 
-export function buildSharedLibraryConfig(
-  currentFilePath: string
+export function buildLibraryConfig(
+  currentFilePath: string,
+  excludeDashboardLib?: boolean
 ): webpack.Configuration {
   const requireAtPlace = createRequire(currentFilePath)
+  const dashboardExterns = {
+    '@tidb-dashboard/core': 'DashboardCore',
+    '@tidb-dashboard/ui': 'DashboardUi',
+  }
   return {
-    output: {
-      libraryTarget: 'amd',
+    externalsType: 'global',
+    externals: {
+      ...requireAtPlace('@tidb-dashboard/shared-libraries/externs.json'),
+      ...(excludeDashboardLib !== true ? dashboardExterns : {}),
     },
-    resolve: {
-      alias: {
-        ...requireAtPlace(
-          '@tidb-dashboard/shared-libraries/libraries-alias.json'
-        ),
-      },
-    },
-    externals: Object.fromEntries(
-      requireAtPlace(
-        '@tidb-dashboard/shared-libraries/libraries.json'
-      ).map((p) => [p, p])
-    ),
   }
 }
 
-export function buildBaseLibraryConfig(): webpack.Configuration {
-  return {
-    output: {
-      libraryTarget: 'amd',
-    },
-    externals: Object.fromEntries(
-      ['@tidb-dashboard/core', '@tidb-dashboard/ui'].map((p) => [p, p])
-    ),
+export function buildWatchConfig(env: WebpackEnv): webpack.Configuration {
+  if (env !== 'development') {
+    return {}
   }
+  return {
+    watch: true,
+    stats: { preset: 'minimal', warnings: false },
+  }
+}
+
+export function buildStandardAppConfig(
+  env: WebpackEnv,
+  currentFilePath: string
+): webpack.Configuration {
+  return merge(
+    buildCommonConfig(env, currentFilePath),
+    buildLibraryConfig(currentFilePath),
+    buildFSCacheConfig(env, currentFilePath),
+    buildWatchConfig(env),
+    {
+      entry: {
+        index: './src',
+      },
+    }
+  )
+}
+
+export function importDir(fileName: string): string {
+  return path.dirname(require.resolve(fileName))
+}
+
+export function modulePath(moduleName: string, rest: string): string {
+  const basePath = importDir(`${moduleName}/package.json`)
+  return path.join(basePath, rest)
 }

@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react'
 import cx from 'classnames'
 import _ from 'lodash'
-
+import React, { useMemo } from 'react'
 import styles from './Bar.module.less'
 
 export interface IBarProps {

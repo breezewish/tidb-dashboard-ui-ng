@@ -1,59 +1,87 @@
 import path from 'path'
-import { merge } from 'webpack-merge'
-import webpack from 'webpack'
+import CopyPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import HtmlWebpackTagsPlugin from 'html-webpack-tags-plugin'
-import CopyPlugin from 'copy-webpack-plugin'
+import webpack from 'webpack'
+import WebpackDevServer from 'webpack-dev-server'
+import { merge } from 'webpack-merge'
 import * as webpackUtils from '@tidb-dashboard/build-scripts/webpack/utils'
 import { ROOT_DIR } from '@tidb-dashboard/build-scripts/webpack/utils'
 
-function generateImportMapImports() {
-  const sharedLibraryImports = Object.fromEntries(
-    Object.entries(
-      require('@tidb-dashboard/shared-libraries/build/manifest.shared-libraries.json')
-    )
-      .map(([name, path]) => {
-        if (!name.endsWith('.js')) {
-          return false
-        }
-        return [name.replace(/\.js$/, ''), './' + path]
-      })
-      .filter(Boolean) as [string, string][]
-  )
+function getHtmlScripts() {
+  const tags: string[] = []
+  {
+    const externs = require('@tidb-dashboard/shared-libraries/externs.json')
+    const manifest = require('@tidb-dashboard/shared-libraries/build/common/manifest.libs_common.json')
+    const manifestKeys = Object.keys(manifest)
+    for (const externName of Object.keys(externs)) {
+      const key = manifestKeys.find(
+        (mk) => mk.indexOf(externName + '.') === 0 && mk.match(/\.js$/)
+      )
+      if (key) {
+        tags.push(manifest[key])
+      }
+    }
+  }
+  {
+    const manifest = require('@tidb-dashboard/shared-libraries/build/fabric/manifest.libs_fabric')
+    tags.push(manifest['fabric.js'])
+  }
+  {
+    const manifest = require('@tidb-dashboard/core/build/manifest.core.json')
+    tags.push(manifest['core.js'])
+  }
+  {
+    const manifest = require('@tidb-dashboard/ui/build/lib/manifest.ui_lib.json')
+    tags.push(manifest['ui.js'])
+  }
+  {
+    const manifest = require('@tidb-dashboard/ui/build/styles/manifest.ui_styles.json')
+    tags.push(manifest['light.css'])
+  }
   return {
-    ...sharedLibraryImports,
-    '@tidb-dashboard/core':
-      './' +
-      require('@tidb-dashboard/core/build/manifest.core.json')['core.js'],
-    '@tidb-dashboard/ui':
-      './' +
-      require('@tidb-dashboard/ui/build/lib/manifest.ui_lib.json')['ui.js'],
+    append: false,
+    tags,
   }
 }
 
-export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
+function buildDevServerConfig(
+  env: webpackUtils.WebpackEnv
+): webpack.Configuration {
+  if (env === 'production') {
+    return {}
+  }
+  const devServer: WebpackDevServer.Configuration = {
+    contentBase: path.join(__dirname, 'public'),
+    watchContentBase: true,
+    compress: true,
+    port: 3001,
+    clientLogLevel: 'none',
+  }
+  return { devServer, stats: { preset: 'minimal' } } as any
+}
+
+export default function config(
+  env: webpackUtils.WebpackEnv
+): webpack.Configuration {
   return merge(
     webpackUtils.buildCommonConfig(env, __filename),
-    webpackUtils.buildSharedLibraryConfig(__filename),
-    webpackUtils.buildBaseLibraryConfig(),
+    webpackUtils.buildLibraryConfig(__filename),
+    webpackUtils.buildFSCacheConfig(env, __filename),
+    buildDevServerConfig(env),
     {
       entry: {
         app: './src',
-      },
-      output: {
-        library: 'app',
       },
       plugins: [
         new CopyPlugin({
           patterns: [
             {
-              context: path.dirname(
-                require.resolve('systemjs/dist/system.min.js')
-              ),
+              context: `${ROOT_DIR}/packages/shared-libraries/build/common`,
               from: '**/*',
             },
             {
-              context: `${ROOT_DIR}/packages/shared-libraries/build`,
+              context: `${ROOT_DIR}/packages/shared-libraries/build/fabric`,
               from: '**/*',
             },
             {
@@ -70,21 +98,10 @@ export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
             },
           ],
         }),
-        new HtmlWebpackTagsPlugin({
-          append: false,
-          tags: [
-            'system.js',
-            'extras/named-register.js',
-            'extras/amd.js',
-            // manifestUiStyles['light.css'],
-          ],
-        }),
+        new HtmlWebpackTagsPlugin(getHtmlScripts()),
         new HtmlWebpackPlugin({
+          cache: false,
           template: 'public/index.html',
-          templateParameters: {
-            imports: generateImportMapImports(),
-          },
-          inject: false,
           ...(env === 'production' && {
             minify: {
               removeComments: true,
@@ -103,6 +120,4 @@ export default function (env: webpackUtils.WebpackEnv): webpack.Configuration {
       ],
     }
   )
-
-  // return {}
 }

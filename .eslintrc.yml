@@ -1,0 +1,24 @@
+extends: react-app
+rules:
+  jsx-a11y/anchor-is-valid: off
+  import/no-extraneous-dependencies:
+    - warn
+    - devDependencies: false
+      optionalDependencies: false
+      peerDependencies: true
+      bundledDependencies: false
+  import/order:
+    - warn
+    - newlines-between: never
+      groups: [builtin, external, internal, parent, sibling, index]
+      alphabetize:
+        order: asc
+      pathGroups:
+        - pattern: '@tidb-dashboard/**'
+          group: internal
+        - pattern: '@core/**'
+          group: internal
+        - pattern: '@ui/**'
+          group: internal
+      pathGroupsExcludedImportTypes:
+        - builtin

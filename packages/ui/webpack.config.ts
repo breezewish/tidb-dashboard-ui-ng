@@ -9,16 +9,17 @@ import * as webpackUtils from '@tidb-dashboard/build-scripts/webpack/utils'
 function libraryConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
   return merge(
     webpackUtils.buildCommonConfig(env, __filename),
-    webpackUtils.buildSharedLibraryConfig(__filename),
+    webpackUtils.buildLibraryConfig(__filename),
+    webpackUtils.buildFSCacheConfig(env, __filename),
+    webpackUtils.buildWatchConfig(env),
     {
       entry: {
         ui: './src',
       },
       output: {
         path: path.join(__dirname, 'build/lib'),
-      },
-      externals: {
-        '@tidb-dashboard/core': { amd: '@tidb-dashboard/core' },
+        library: 'DashboardUi',
+        libraryTarget: 'global',
       },
       plugins: [
         new ManifestPlugin({
@@ -30,42 +31,46 @@ function libraryConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
 }
 
 function styleConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
-  return {
-    mode: env,
-    context: __dirname,
-    entry: {
-      light: './styles/full/light.less',
-      dark: './styles/full/dark.less',
-    },
-    output: {
-      path: path.join(__dirname, 'build/styles'),
-    },
-    module: {
-      rules: [
-        {
-          test: /\.less$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            ...webpackUtils.getCssLoaders(env, {
-              importLoaders: 3,
-            }),
-            ...webpackUtils.getLessLoaders(env),
-          ],
-          sideEffects: true,
-        },
+  return merge(
+    webpackUtils.buildFSCacheConfig(env, __filename),
+    webpackUtils.buildWatchConfig(env),
+    {
+      mode: env,
+      context: __dirname,
+      entry: {
+        light: './styles/full/light.less',
+        dark: './styles/full/dark.less',
+      },
+      output: {
+        path: path.join(__dirname, 'build/styles'),
+      },
+      module: {
+        rules: [
+          {
+            test: /\.less$/,
+            use: [
+              MiniCssExtractPlugin.loader,
+              ...webpackUtils.getCssLoaders(env, {
+                importLoaders: 3,
+              }),
+              ...webpackUtils.getLessLoaders(env),
+            ],
+            sideEffects: true,
+          },
+        ],
+      },
+      plugins: [
+        new MiniCssExtractPlugin(),
+        new CleanWebpackPlugin(),
+        new ManifestPlugin({
+          fileName: 'manifest.ui_styles.json',
+        }),
       ],
-    },
-    plugins: [
-      new MiniCssExtractPlugin(),
-      new CleanWebpackPlugin(),
-      new ManifestPlugin({
-        fileName: 'manifest.ui_styles.json',
-      }),
-    ],
-  }
+    }
+  )
 }
 
-export default function (
+export default function config(
   env: webpackUtils.WebpackEnv
 ): webpack.Configuration[] {
   return [libraryConfig(env), styleConfig(env)]

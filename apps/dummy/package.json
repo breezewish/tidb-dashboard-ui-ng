@@ -1,0 +1,15 @@
+{
+  "name": "@tidb-dashboard/dummy",
+  "private": true,
+  "description": "This is a dummy App that depends on all Apps in TiDB Dashboard. Its scripts are always run finally.",
+  "version": "0.0.0",
+  "author": "Breezewish <me@breeswish.org>",
+  "license": "MIT",
+  "dependencies": {
+    "@tidb-dashboard/app": "^0.0.0",
+    "@tidb-dashboard/appSignIn": "^0.0.0"
+  },
+  "scripts": {
+    "dev:bundle": "##-- All packages bundle finished --##"
+  }
+}

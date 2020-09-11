@@ -4,6 +4,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@core/*": ["packages/core/src/*"],
+
       // Explicitly resolve these modules to a TS source file in development environment, so that
       // there is no need to wait for a complete production build for changes happen in these
       // modules.

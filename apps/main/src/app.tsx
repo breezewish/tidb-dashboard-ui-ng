@@ -1,25 +1,45 @@
+import { useMount } from 'ahooks'
+import { Alert } from 'antd'
+import React from 'react'
+import { useEffect, useState } from 'react'
 import { PartialRouteObject } from 'react-router'
 import { useRoutes } from 'react-router-dom'
-import { Registry } from '@tidb-dashboard/core'
-import { useEffect, useState } from 'react'
+import { HashRouter } from 'react-router-dom'
+import { useServices, ServicesContainer } from '@tidb-dashboard/core'
 
-export interface IAppRegistryRootProps {
-  registry: any //Registry.AppRegistry
-}
-
-export function App({ registry }: IAppRegistryRootProps) {
+function Router() {
   const [routes, setRoutes] = useState<PartialRouteObject[]>([])
+  const services = useServices()
 
   useEffect(() => {
-    const handleAppChange = () => {
-      setRoutes(registry.getRoutes())
+    const handleRouteChanged = async () => {
+      setRoutes(services.Routing.getRoutes())
     }
-    registry.on('appChanged', handleAppChange)
-    return () => {
-      registry.off('appChanged', handleAppChange)
-    }
-  }, [registry])
+    return services.Routing.hooks.routeChanged.tapAsync(handleRouteChanged)
+  }, [services])
 
-  const element = useRoutes(routes)
-  return element
+  return useRoutes(routes)
+}
+
+export interface IAppProps {
+  container: ServicesContainer
+}
+
+export function App({ container }: IAppProps) {
+  useMount(() => {
+    const spinner = document.getElementById('dashboard_page_spinner')
+    if (spinner) {
+      spinner.remove()
+    }
+  })
+
+  return (
+    <ServicesContainer.Context.Provider value={container}>
+      <HashRouter>
+        <Alert.ErrorBoundary>
+          <Router />
+        </Alert.ErrorBoundary>
+      </HashRouter>
+    </ServicesContainer.Context.Provider>
+  )
 }

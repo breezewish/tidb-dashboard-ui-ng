@@ -88,24 +88,10 @@
       }
     </style>
     <title>TiDB Dashboard</title>
-    <%= htmlWebpackPlugin.tags.headTags %>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="dashboard_page_spinner"><div class="dot-flashing"></div></div>
     <div id="root"></div>
-    <script>
-      (function () {
-        const imports = <%= JSON.stringify(htmlWebpackPlugin.options.templateParameters.imports) %>;
-        const im = document.createElement('script');
-        im.type = 'systemjs-importmap';
-        im.textContent = JSON.stringify({imports:imports}, null, 2);
-        document.currentScript.after(im);
-      })()
-    </script>
-    <%= htmlWebpackPlugin.tags.bodyTags %>
-    <script>
-      System.import('app')
-    </script>
   </body>
 </html>

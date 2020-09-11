@@ -1,0 +1,12 @@
+{
+  "react": "React",
+  "react-dom": "ReactDOM",
+  "moment": "moment",
+  "antd": "antd",
+  "history": "HistoryLibrary",
+  "office-ui-fabric-react": "Fabric",
+  "react-router": "ReactRouter",
+  "react-router-dom": "ReactRouterDOM",
+  "dayjs": "dayjs",
+  "lodash": "_"
+}
