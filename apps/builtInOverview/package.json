@@ -1,28 +1,26 @@
 {
-  "name": "@tidb-dashboard/appSignIn",
+  "name": "@tidb-dashboard/built-in-overview",
   "private": true,
   "version": "0.0.0",
   "author": "Breezewish <me@breeswish.org>",
   "license": "MIT",
   "main": "dist/index.js",
   "dependencies": {
-    "@ant-design/icons": "^4.2.2",
-    "@g07cha/flexbox-react": "^5.0.0",
-    "ahooks": "^2.6.0",
-    "rc-animate": "^3.1.0",
-    "react-use": "^15.3.4",
     "@tidb-dashboard/core": "^0.0.0",
     "@tidb-dashboard/shared-libraries": "^0.0.0",
     "@tidb-dashboard/ui": "^0.0.0",
+    "ahooks": "^2.6.0",
     "antd": "^4.6.2",
     "dayjs": "^1.8.35",
     "history": "^5.0.0",
     "lodash": "^4.17.20",
     "office-ui-fabric-react": "^7.134.3",
+    "rc-animate": "^3.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router": "^6.0.0-beta.0",
-    "react-router-dom": "^6.0.0-beta.0"
+    "react-router-dom": "^6.0.0-beta.0",
+    "react-use": "^15.3.4"
   },
   "devDependencies": {
     "@tidb-dashboard/build-scripts": "^0.0.0"

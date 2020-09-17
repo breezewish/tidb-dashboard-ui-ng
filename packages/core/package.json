@@ -7,22 +7,26 @@
   "license": "MIT",
   "main": "build/core.js",
   "dependencies": {
-    "i18next": "^19.7.0",
-    "i18next-browser-languagedetector": "^6.0.1",
-    "react-i18next": "^11.7.2",
+    "@tidb-dashboard/api": "^0.0.0",
     "@tidb-dashboard/shared-libraries": "^0.0.0",
     "antd": "^4.6.2",
     "dayjs": "^1.8.35",
     "history": "^5.0.0",
+    "i18next": "^19.7.0",
+    "i18next-browser-languagedetector": "^6.0.1",
     "lodash": "^4.17.20",
     "office-ui-fabric-react": "^7.134.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-i18next": "^11.7.2",
     "react-router": "^6.0.0-beta.0",
-    "react-router-dom": "^6.0.0-beta.0"
+    "react-router-dom": "^6.0.0-beta.0",
+    "systemjs": "^6.5.1"
   },
   "devDependencies": {
-    "@tidb-dashboard/build-scripts": "^0.0.0"
+    "@openapitools/openapi-generator-cli": "^1.0.18-4.3.1",
+    "@tidb-dashboard/build-scripts": "^0.0.0",
+    "@types/systemjs": "^6.1.0"
   },
   "scripts": {
     "dev:bundle": "../../scripts/tasks/devBundle.sh",

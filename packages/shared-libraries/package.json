@@ -5,7 +5,6 @@
   "version": "0.0.0",
   "author": "Breezewish <me@breeswish.org>",
   "license": "MIT",
-  "types": "index.d.ts",
   "dependencies": {
     "antd": "^4.6.2",
     "dayjs": "^1.8.35",

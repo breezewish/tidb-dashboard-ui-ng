@@ -1,16 +1,14 @@
 import webpack from 'webpack'
-import { merge } from 'webpack-merge'
 import ManifestPlugin from 'webpack-manifest-plugin'
+import { merge } from 'webpack-merge'
 import * as webpackUtils from '@tidb-dashboard/build-scripts/webpack/utils'
 
-export default function config(
-  env: webpackUtils.WebpackEnv
-): webpack.Configuration {
+export default function config(): webpack.Configuration {
   return merge(
-    webpackUtils.buildCommonConfig(env, __filename),
+    webpackUtils.buildCommonConfig(__filename),
     webpackUtils.buildLibraryConfig(__filename, true),
-    webpackUtils.buildFSCacheConfig(env, __filename),
-    webpackUtils.buildWatchConfig(env),
+    // webpackUtils.buildFSCacheConfig(__filename),
+    webpackUtils.buildWatchConfig(),
     {
       entry: {
         core: './src',

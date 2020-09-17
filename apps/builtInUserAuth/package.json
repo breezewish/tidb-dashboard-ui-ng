@@ -1,0 +1,37 @@
+{
+  "name": "@tidb-dashboard/built-in-user-auth",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Breezewish <me@breeswish.org>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@ant-design/icons": "^4.2.2",
+    "@g07cha/flexbox-react": "^5.0.0",
+    "@tidb-dashboard/core": "^0.0.0",
+    "@tidb-dashboard/shared-libraries": "^0.0.0",
+    "@tidb-dashboard/ui": "^0.0.0",
+    "ahooks": "^2.6.0",
+    "antd": "^4.6.2",
+    "classnames": "^2.2.6",
+    "dayjs": "^1.8.35",
+    "history": "^5.0.0",
+    "lodash": "^4.17.20",
+    "office-ui-fabric-react": "^7.134.3",
+    "rc-animate": "^3.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router": "^6.0.0-beta.0",
+    "react-router-dom": "^6.0.0-beta.0",
+    "react-use": "^15.3.4"
+  },
+  "devDependencies": {
+    "@tidb-dashboard/build-scripts": "^0.0.0"
+  },
+  "scripts": {
+    "dev:bundle": "../../scripts/tasks/devBundle.sh",
+    "dev:check:ts": "../../scripts/tasks/checkTypeScriptWatch.sh",
+    "dev:check:lint": "../../scripts/tasks/checkEslintWatch.sh",
+    "dev:check": "run-p -s dev:check:**"
+  }
+}

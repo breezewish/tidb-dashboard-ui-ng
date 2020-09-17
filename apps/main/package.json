@@ -6,20 +6,21 @@
   "license": "MIT",
   "main": "dist/index.js",
   "dependencies": {
-    "ahooks": "^2.6.0",
-    "nprogress": "^0.2.0",
     "@tidb-dashboard/core": "^0.0.0",
     "@tidb-dashboard/shared-libraries": "^0.0.0",
     "@tidb-dashboard/ui": "^0.0.0",
+    "ahooks": "^2.6.0",
     "antd": "^4.6.2",
     "dayjs": "^1.8.35",
     "history": "^5.0.0",
     "lodash": "^4.17.20",
+    "nprogress": "^0.2.0",
     "office-ui-fabric-react": "^7.134.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router": "^6.0.0-beta.0",
-    "react-router-dom": "^6.0.0-beta.0"
+    "react-router-dom": "^6.0.0-beta.0",
+    "string-template": "^1.0.0"
   },
   "devDependencies": {
     "@tidb-dashboard/build-scripts": "^0.0.0",
@@ -31,7 +32,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "dev:bundle": "webpack-dev-server --config webpack.config.ts --env development --colors",
+    "dev:bundle": "NODE_ENV=development webpack-dev-server --config webpack.config.ts --colors",
     "dev:check:ts": "../../scripts/tasks/checkTypeScriptWatch.sh",
     "dev:check:lint": "../../scripts/tasks/checkEslintWatch.sh",
     "dev:check": "run-p -s dev:check:**"

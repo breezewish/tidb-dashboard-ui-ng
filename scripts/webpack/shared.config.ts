@@ -1,16 +1,18 @@
 import path from 'path'
-import webpack from 'webpack'
-import { ESBuildPlugin } from 'esbuild-loader'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import { ESBuildPlugin } from 'esbuild-loader'
+import webpack from 'webpack'
+import merge from 'webpack-merge'
 import WebpackBar from 'webpackbar'
+import * as env from './env'
 import * as utils from './utils'
 
 export default function sharedConfig(
-  env: utils.WebpackEnv,
   currentFilePath: string
 ): webpack.Configuration {
   const dirName = path.dirname(currentFilePath)
-  return {
+  return merge(env.buildEnvDef(currentFilePath), {
+    mode: utils.NODE_ENV,
     context: dirName,
     output: {
       path: path.join(dirName, 'build'),
@@ -20,7 +22,6 @@ export default function sharedConfig(
       alias: {
         '@core': path.resolve(utils.ROOT_DIR, 'packages/core/src'),
         '@ui': path.resolve(utils.ROOT_DIR, 'packages/ui/src'),
-        '@': path.join(dirName, 'src'),
       },
     },
     module: {
@@ -28,11 +29,58 @@ export default function sharedConfig(
         {
           oneOf: [
             {
+              test: /\.ya?ml$/,
+              type: 'json',
+              use: require.resolve('yaml-loader'),
+            },
+            {
+              test: /\.svg$/,
+              issuer: /\.[tj]sx?$/,
+              loader: require.resolve('@svgr/webpack'),
+            },
+            {
+              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/],
+              use: [
+                {
+                  loader: require.resolve('url-loader'),
+                  options: {
+                    name: '[name].[hash:8].[ext]',
+                  },
+                },
+                {
+                  loader: require.resolve('image-webpack-loader'),
+                  options: {
+                    disable: utils.NODE_ENV === 'development',
+                    mozjpeg: {
+                      enabled: false,
+                    },
+                    optipng: {
+                      enabled: false,
+                    },
+                    pngquant: {
+                      enabled: false,
+                    },
+                    gifsicle: {
+                      enabled: false,
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              test: [/\.ttf$/, /\.eot$/, /\.woff2?$/],
+              loader: require.resolve('url-loader'),
+              options: {
+                name: '[name].[hash:8].[ext]',
+              },
+            },
+            {
               test: /\.[tj]sx?$/,
               loader: require.resolve('esbuild-loader'),
               options: {
                 loader: 'tsx',
-                target: 'es2015',
+                // FIXME: Change to es2015 after https://github.com/evanw/esbuild/issues/388 is fixed
+                target: 'es2017',
               },
             },
             {
@@ -40,7 +88,7 @@ export default function sharedConfig(
               exclude: /\.module\.css$/,
               use: [
                 require.resolve('style-loader'),
-                ...utils.getCssLoaders(env, {
+                ...utils.getCssLoaders({
                   importLoaders: 1,
                 }),
               ],
@@ -50,7 +98,7 @@ export default function sharedConfig(
               test: /\.module\.css$/,
               use: [
                 require.resolve('style-loader'),
-                ...utils.getCssLoaders(env, {
+                ...utils.getCssLoaders({
                   importLoaders: 1,
                   modules: true,
                 }),
@@ -61,10 +109,10 @@ export default function sharedConfig(
               exclude: /\.module\.less$/,
               use: [
                 require.resolve('style-loader'),
-                ...utils.getCssLoaders(env, {
+                ...utils.getCssLoaders({
                   importLoaders: 3,
                 }),
-                ...utils.getLessLoaders(env),
+                ...utils.getLessLoaders(),
               ],
               sideEffects: true,
             },
@@ -72,11 +120,11 @@ export default function sharedConfig(
               test: /\.module\.less$/,
               use: [
                 require.resolve('style-loader'),
-                ...utils.getCssLoaders(env, {
+                ...utils.getCssLoaders({
                   importLoaders: 3,
                   modules: true,
                 }),
-                ...utils.getLessLoaders(env),
+                ...utils.getLessLoaders(),
               ],
             },
           ],
@@ -84,5 +132,5 @@ export default function sharedConfig(
       ],
     },
     plugins: [new ESBuildPlugin(), new CleanWebpackPlugin(), new WebpackBar()],
-  }
+  })
 }

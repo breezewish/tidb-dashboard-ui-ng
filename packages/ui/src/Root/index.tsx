@@ -6,14 +6,14 @@ import {
 } from '@ant-design/icons'
 import { ConfigProvider } from 'antd'
 import enUS from 'antd/es/locale/en_US'
-import zhCN from 'antd/es/locale/zh_CN'
+// import zhCN from 'antd/es/locale/zh_CN'
 import {
   Customizations,
   createTheme,
   registerIcons,
 } from 'office-ui-fabric-react'
 import React from 'react'
-import { useTranslation } from '@tidb-dashboard/core'
+// import { useTranslation } from '@tidb-dashboard/core'
 
 registerIcons({
   icons: {
@@ -31,10 +31,10 @@ const theme = createTheme({
 Customizations.applySettings({ theme })
 
 export default function Root({ children }) {
-  const { i18n } = useTranslation()
+  // TODO
+  // const { i18n } = useTranslation()
   return (
-    <ConfigProvider locale={i18n.language === 'en' ? enUS : zhCN}>
-      {children}
-    </ConfigProvider>
+    // <ConfigProvider locale={i18n.language === 'en' ? enUS : zhCN}>
+    <ConfigProvider locale={enUS}>{children}</ConfigProvider>
   )
 }

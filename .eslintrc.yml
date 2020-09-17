@@ -1,12 +1,16 @@
 extends: react-app
+plugins:
+  - prettier
 rules:
   jsx-a11y/anchor-is-valid: off
+  import/no-cycle: error
   import/no-extraneous-dependencies:
     - warn
     - devDependencies: false
       optionalDependencies: false
       peerDependencies: true
       bundledDependencies: false
+  prettier/prettier: warn
   import/order:
     - warn
     - newlines-between: never

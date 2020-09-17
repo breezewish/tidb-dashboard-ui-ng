@@ -1,17 +1,17 @@
 import path from 'path'
-import webpack from 'webpack'
-import { merge } from 'webpack-merge'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import webpack from 'webpack'
 import ManifestPlugin from 'webpack-manifest-plugin'
+import { merge } from 'webpack-merge'
 import * as webpackUtils from '@tidb-dashboard/build-scripts/webpack/utils'
 
-function libraryConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
+function libraryConfig(): webpack.Configuration {
   return merge(
-    webpackUtils.buildCommonConfig(env, __filename),
+    webpackUtils.buildCommonConfig(__filename),
     webpackUtils.buildLibraryConfig(__filename),
-    webpackUtils.buildFSCacheConfig(env, __filename),
-    webpackUtils.buildWatchConfig(env),
+    webpackUtils.buildFSCacheConfig(__filename),
+    webpackUtils.buildWatchConfig(),
     {
       entry: {
         ui: './src',
@@ -30,12 +30,12 @@ function libraryConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
   )
 }
 
-function styleConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
+function styleConfig(): webpack.Configuration {
   return merge(
-    webpackUtils.buildFSCacheConfig(env, __filename),
-    webpackUtils.buildWatchConfig(env),
+    webpackUtils.buildFSCacheConfig(__filename),
+    webpackUtils.buildWatchConfig(),
     {
-      mode: env,
+      mode: webpackUtils.NODE_ENV,
       context: __dirname,
       entry: {
         light: './styles/full/light.less',
@@ -50,10 +50,10 @@ function styleConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
             test: /\.less$/,
             use: [
               MiniCssExtractPlugin.loader,
-              ...webpackUtils.getCssLoaders(env, {
+              ...webpackUtils.getCssLoaders({
                 importLoaders: 3,
               }),
-              ...webpackUtils.getLessLoaders(env),
+              ...webpackUtils.getLessLoaders(),
             ],
             sideEffects: true,
           },
@@ -70,8 +70,6 @@ function styleConfig(env: webpackUtils.WebpackEnv): webpack.Configuration {
   )
 }
 
-export default function config(
-  env: webpackUtils.WebpackEnv
-): webpack.Configuration[] {
-  return [libraryConfig(env), styleConfig(env)]
+export default function config(): webpack.Configuration[] {
+  return [libraryConfig(), styleConfig()]
 }

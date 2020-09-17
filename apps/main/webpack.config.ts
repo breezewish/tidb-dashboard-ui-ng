@@ -1,12 +1,11 @@
-import path from 'path'
 import CopyPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import HtmlWebpackTagsPlugin from 'html-webpack-tags-plugin'
 import webpack from 'webpack'
-import WebpackDevServer from 'webpack-dev-server'
 import { merge } from 'webpack-merge'
 import * as webpackUtils from '@tidb-dashboard/build-scripts/webpack/utils'
 import { ROOT_DIR } from '@tidb-dashboard/build-scripts/webpack/utils'
+import buildDevServerConfig from './webpack.devServer.config'
 
 function getHtmlScripts() {
   const tags: string[] = []
@@ -45,30 +44,11 @@ function getHtmlScripts() {
   }
 }
 
-function buildDevServerConfig(
-  env: webpackUtils.WebpackEnv
-): webpack.Configuration {
-  if (env === 'production') {
-    return {}
-  }
-  const devServer: WebpackDevServer.Configuration = {
-    contentBase: path.join(__dirname, 'public'),
-    watchContentBase: true,
-    compress: true,
-    port: 3001,
-    clientLogLevel: 'none',
-  }
-  return { devServer, stats: { preset: 'minimal' } } as any
-}
-
-export default function config(
-  env: webpackUtils.WebpackEnv
-): webpack.Configuration {
+export default function config(): webpack.Configuration {
   return merge(
-    webpackUtils.buildCommonConfig(env, __filename),
+    webpackUtils.buildCommonConfig(__filename),
     webpackUtils.buildLibraryConfig(__filename),
-    webpackUtils.buildFSCacheConfig(env, __filename),
-    buildDevServerConfig(env),
+    buildDevServerConfig(),
     {
       entry: {
         app: './src',
@@ -102,7 +82,7 @@ export default function config(
         new HtmlWebpackPlugin({
           cache: false,
           template: 'public/index.html',
-          ...(env === 'production' && {
+          ...(webpackUtils.NODE_ENV === 'production' && {
             minify: {
               removeComments: true,
               collapseWhitespace: true,

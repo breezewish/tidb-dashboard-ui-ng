@@ -4,11 +4,16 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      // Shortcuts for source codes to reduce import path length.
+      // WARN: These shortcuts are only available in the core or ui package, for example, @core
+      // must be used in core packages, not in ui packages or apps.
       "@core/*": ["packages/core/src/*"],
+      "@ui/*": ["packages/ui/src/*"],
 
       // Explicitly resolve these modules to a TS source file in development environment, so that
       // there is no need to wait for a complete production build for changes happen in these
       // modules.
+      "@tidb-dashboard/api": ["packages/api/src/index.ts"],
       "@tidb-dashboard/core": ["packages/core/src/index.ts"],
       "@tidb-dashboard/ui": ["packages/ui/src/index.ts"]
     }

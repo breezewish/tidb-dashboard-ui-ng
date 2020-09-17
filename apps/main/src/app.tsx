@@ -8,8 +8,10 @@ import { HashRouter } from 'react-router-dom'
 import { useServices, ServicesContainer } from '@tidb-dashboard/core'
 
 function Router() {
-  const [routes, setRoutes] = useState<PartialRouteObject[]>([])
   const services = useServices()
+  const [routes, setRoutes] = useState<PartialRouteObject[]>(
+    services.Routing.getRoutes()
+  )
 
   useEffect(() => {
     const handleRouteChanged = async () => {
@@ -34,12 +36,12 @@ export function App({ container }: IAppProps) {
   })
 
   return (
-    <ServicesContainer.Context.Provider value={container}>
+    <ServicesContainer.Provider container={container}>
       <HashRouter>
         <Alert.ErrorBoundary>
           <Router />
         </Alert.ErrorBoundary>
       </HashRouter>
-    </ServicesContainer.Context.Provider>
+    </ServicesContainer.Provider>
   )
 }

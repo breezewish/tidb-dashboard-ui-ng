@@ -1,0 +1,22 @@
+{
+  "name": "@tidb-dashboard/api",
+  "description": "TiDB Dashboard generated API client",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Breezewish <me@breeswish.org>",
+  "license": "MIT",
+  "main": "build/api.js",
+  "dependencies": {
+    "axios": "^0.20.0"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^1.0.18-5.0.0-beta2",
+    "@tidb-dashboard/build-scripts": "^0.0.0",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "scripts": {
+    "dev:bundle:apiWatch": "./scripts/bundleApiWatch.sh",
+    "dev:bundle:lib": "../../scripts/tasks/devBundle.sh",
+    "dev:bundle": "./scripts/bundleApi.sh && run-p -s dev:bundle:**"
+  }
+}

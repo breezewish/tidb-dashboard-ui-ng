@@ -1,53 +1,64 @@
 import { Alert } from 'antd'
 import { Location } from 'history'
 import React, { useState, useEffect } from 'react'
-import { PartialRouteObject, useLocation } from 'react-router'
+import { PartialRouteObject } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import { Navigate } from 'react-router-dom'
-import {
-  BaseService,
-  ServicesContainer,
-  useServices,
-  IApp,
-} from '@core/services'
+import type { IApp } from '@core/services/AppRegistry'
+import { BaseService } from '@core/services/Base'
+import { useServices } from '@core/services/Container'
 import { AsyncSeriesBailHook, AsyncParallelHook } from '@core/tap'
 
-interface IPrivateRouteProps {
-  children?: React.ReactNode
+export interface RouteMetadata extends Record<string, any> {
+  skipAuthentication?: boolean
+}
+
+export interface Route extends PartialRouteObject {
+  metadata?: RouteMetadata
+  sourceApp?: IApp
 }
 
 enum RouteState {
-  Authenticating,
-  Authenticated,
-  NotAuthenticated,
+  Authenticating = 'Authenticating',
+  Authenticated = 'Authenticated',
+  NotAuthenticated = 'NotAuthenticated',
 }
 
-export interface IRouteAuthenticateHookArg {
-  location: Location
+interface IPrivateOrPublicRouteProps {
+  children?: React.ReactNode
+  route: Route
 }
 
-export interface IRouteAuthenticateHookRet {
-  failAction: {
-    /**
-     * Performs a redirection.
-     *
-     * When this is set, `component` will be ignored.
-     */
-    redirectTo?: string
-
-    /**
-     * Display a component instead of the route content.
-     */
-    component?: React.ReactNode
-  }
+function PublicRoute({
+  children,
+  route,
+}: IPrivateOrPublicRouteProps): JSX.Element {
+  const location = useLocation()
+  console.debug(
+    '%s: Render public route: %s',
+    route.sourceApp?.getId(),
+    location.pathname
+  )
+  return <>{children}</>
 }
 
-function PrivateRoute({ children }: IPrivateRouteProps): JSX.Element {
+function PrivateRoute({
+  children,
+  route,
+}: IPrivateOrPublicRouteProps): JSX.Element {
   const [state, setState] = useState(RouteState.Authenticating)
   const [failureElement, setFailureElement] = useState<
     React.ReactNode | undefined
   >(undefined)
   const { Routing } = useServices()
   const location = useLocation()
+
+  console.debug(
+    '%s: Render private route [%s]: %s',
+    route.sourceApp?.getId(),
+    state,
+    location.pathname
+  )
 
   useEffect(() => {
     // Result will be discarded when location is changed.
@@ -61,6 +72,7 @@ function PrivateRoute({ children }: IPrivateRouteProps): JSX.Element {
 
         const r = await Routing.hooks.routeAuthenticate.invokeAsync({
           location,
+          route,
         })
         if (cancel) {
           return
@@ -93,7 +105,7 @@ function PrivateRoute({ children }: IPrivateRouteProps): JSX.Element {
     return () => {
       cancel = true
     }
-  }, [Routing, location])
+  }, [Routing, route, location])
 
   switch (state) {
     case RouteState.Authenticating:
@@ -104,6 +116,32 @@ function PrivateRoute({ children }: IPrivateRouteProps): JSX.Element {
       return <>{failureElement}</>
     default:
       return <>{null}</>
+  }
+}
+
+export interface IRouteAuthenticateHookArg {
+  location: Location
+  route: Route
+}
+
+export interface IRouteAuthenticateHookRet {
+  failAction: {
+    /**
+     * Performs a redirection.
+     *
+     * When this is set, `component` will be ignored.
+     */
+    redirectTo?: string
+
+    /**
+     * Whether the redirection should replace current location.
+     */
+    redirectReplace?: boolean
+
+    /**
+     * Display a component instead of the route content.
+     */
+    component?: React.ReactNode
   }
 }
 
@@ -130,38 +168,31 @@ export class RoutingService extends BaseService {
     routeChanged: new AsyncParallelHook(),
   }
 
-  private routes: PartialRouteObject[] = []
+  private routes: Route[] = []
 
-  public constructor(container: ServicesContainer) {
-    super(container)
-    container.hooks.containerConstructed.tapSyncOnce(() => {
-      container.AppRegistry.hooks.appRegistered.tapAsync(
-        this.handleAppRegistered.bind(this)
-      )
-    })
-  }
-
-  private async handleAppRegistered(app: IApp) {
-    if (app.getRoutes) {
-      this.registerAppRoutes(app.getRoutes())
-    }
-  }
-
-  private async registerAppRoutes(routes: PartialRouteObject[]) {
+  public addRoutes(sourceApp: IApp, routes: Route[]): RoutingService {
     this.routes = [
       ...this.routes,
       ...routes.map((r) => {
-        return {
+        console.debug('%s: Adding route %s', sourceApp.getId(), r.path)
+        const newRoute: Route = {
           ...r,
-          element: (
-            <PrivateRoute>
-              <Alert.ErrorBoundary>{r.element}</Alert.ErrorBoundary>
-            </PrivateRoute>
-          ),
-        } as PartialRouteObject
+          sourceApp,
+        }
+        newRoute.element = newRoute.metadata?.skipAuthentication ? (
+          <PublicRoute route={newRoute}>
+            <Alert.ErrorBoundary>{newRoute.element}</Alert.ErrorBoundary>
+          </PublicRoute>
+        ) : (
+          <PrivateRoute route={newRoute}>
+            <Alert.ErrorBoundary>{newRoute.element}</Alert.ErrorBoundary>
+          </PrivateRoute>
+        )
+        return newRoute
       }),
     ]
     this.hooks.routeChanged.invokeAsync()
+    return this
   }
 
   public getRoutes(): PartialRouteObject[] {

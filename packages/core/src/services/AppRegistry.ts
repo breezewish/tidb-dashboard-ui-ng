@@ -1,12 +1,12 @@
-import { PartialRouteObject } from 'react-router'
-import { addTranslations } from '@core/i18n'
-import { BaseService } from '@core/services'
+import { BaseService } from '@core/services/Base'
+import type { ServicesContainer } from '@core/services/Container'
 import { AsyncParallelHook } from '@core/tap'
 
 export interface IApp {
   getId(): string
-  getTranslations?: () => __WebpackModuleApi.RequireContext
-  getRoutes?: () => PartialRouteObject[]
+  onRegister?: (container: ServicesContainer) => void
+  // getTranslations?: () => __WebpackModuleApi.RequireContext
+  // getRoutes?: () => PartialRouteObject[]
 }
 
 export type AppRegistryServiceHooks = {
@@ -32,9 +32,11 @@ export class AppRegistryService extends BaseService {
       return this
     }
 
-    if (app.getTranslations) {
-      addTranslations(app.getTranslations())
-    }
+    app.onRegister?.(this.parentContainer)
+
+    // if (app.getTranslations) {
+    //   addTranslations(app.getTranslations())
+    // }
 
     this._apps[id] = app
     await this.hooks.appRegistered.invokeAsync(app)

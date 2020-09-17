@@ -62,11 +62,8 @@ export class AsyncParallelHook<T> extends BaseAsyncHook<T, void> {
  * Run listeners in parallel, early return when first value is available.
  * When error happens, error will be thrown immediately.
  */
-export class AsyncParallelBailHook<T, R> extends BaseAsyncHook<
-  T,
-  R | undefined
-> {
-  public invokeAsync(arg: T): Promise<R | undefined> {
+export class AsyncParallelBailHook<T, R> extends BaseAsyncHook<T, R | void> {
+  public invokeAsync(arg: T): Promise<R | void> {
     const staticListeners = [...this.listeners]
     return new Promise((resolve, reject) => {
       let resolved = 0
@@ -111,8 +108,8 @@ export class AsyncSeriesHook<T> extends BaseAsyncHook<T, void> {
  * When error happens, error will be thrown immediately and other listeners
  * are skipped.
  */
-export class AsyncSeriesBailHook<T, R> extends BaseAsyncHook<T, R | undefined> {
-  public async invokeAsync(arg: T): Promise<R | undefined> {
+export class AsyncSeriesBailHook<T, R> extends BaseAsyncHook<T, R | void> {
+  public async invokeAsync(arg: T): Promise<R | void> {
     const staticListeners = [...this.listeners]
     for (const l of staticListeners) {
       if (this.listeners.has(l)) {
@@ -163,8 +160,8 @@ export class SyncSeriesHook<T> extends BaseSyncHook<T, void> {
  * When error happens, error will be thrown immediately and other listeners
  * are skipped.
  */
-export class SyncSeriesBailHook<T, R> extends BaseSyncHook<T, R | undefined> {
-  public invokeSync(arg: T): R | undefined {
+export class SyncSeriesBailHook<T, R> extends BaseSyncHook<T, R | void> {
+  public invokeSync(arg: T): R | void {
     const staticListeners = [...this.listeners]
     for (const l of staticListeners) {
       if (this.listeners.has(l)) {

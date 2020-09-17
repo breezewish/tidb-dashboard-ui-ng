@@ -1,2 +1,2 @@
 #!/bin/bash
-webpack --config webpack.config.ts --env development --colors
+NODE_ENV=development webpack --config webpack.config.ts --colors

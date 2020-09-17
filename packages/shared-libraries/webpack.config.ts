@@ -1,16 +1,16 @@
 import path from 'path'
-import webpack from 'webpack'
-import merge from 'webpack-merge'
-import CopyPlugin from 'copy-webpack-plugin'
-import ManifestPlugin from 'webpack-manifest-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
+import webpack from 'webpack'
+import ManifestPlugin from 'webpack-manifest-plugin'
+import merge from 'webpack-merge'
 import * as webpackUtils from '@tidb-dashboard/build-scripts/webpack/utils'
 
-function commonLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
+function commonLib(): webpack.Configuration {
   // Some eager loaded shared libraries, which will be directly included in HTML.
-  return merge(webpackUtils.buildWatchConfig(env), {
+  return merge(webpackUtils.buildWatchConfig(), {
     context: __dirname,
-    mode: env,
+    mode: webpackUtils.NODE_ENV,
     entry: {
       _eagerLibs: './src',
     },
@@ -23,7 +23,7 @@ function commonLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
           {
             from: webpackUtils.modulePath(
               'react',
-              env === 'development'
+              webpackUtils.NODE_ENV === 'development'
                 ? 'umd/react.development.js'
                 : 'umd/react.production.min.js'
             ),
@@ -32,7 +32,7 @@ function commonLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
           {
             from: webpackUtils.modulePath(
               'react-dom',
-              env === 'development'
+              webpackUtils.NODE_ENV === 'development'
                 ? 'umd/react-dom.development.js'
                 : 'umd/react-dom.production.min.js'
             ),
@@ -41,21 +41,25 @@ function commonLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
           {
             from: webpackUtils.modulePath(
               'moment',
-              env === 'development' ? 'moment.js' : 'min/moment.min.*'
+              webpackUtils.NODE_ENV === 'development'
+                ? 'moment.js'
+                : 'min/moment.min.*'
             ),
             flatten: true,
           },
           {
             from: webpackUtils.modulePath(
               'antd',
-              env === 'development' ? 'dist/antd.js*' : 'dist/antd.min.js*'
+              webpackUtils.NODE_ENV === 'development'
+                ? 'dist/antd.js*'
+                : 'dist/antd.min.js*'
             ),
             flatten: true,
           },
           {
             from: webpackUtils.modulePath(
               'history',
-              env === 'development'
+              webpackUtils.NODE_ENV === 'development'
                 ? 'umd/history.development.js*'
                 : 'umd/history.production.min.js*'
             ),
@@ -64,7 +68,7 @@ function commonLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
           {
             from: webpackUtils.modulePath(
               'react-router',
-              env === 'development'
+              webpackUtils.NODE_ENV === 'development'
                 ? 'umd/react-router.development.js*'
                 : 'umd/react-router.production.min.js*'
             ),
@@ -73,7 +77,7 @@ function commonLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
           {
             from: webpackUtils.modulePath(
               'react-router-dom',
-              env === 'development'
+              webpackUtils.NODE_ENV === 'development'
                 ? 'umd/react-router-dom.development.js*'
                 : 'umd/react-router-dom.production.min.js*'
             ),
@@ -82,7 +86,9 @@ function commonLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
           {
             from: webpackUtils.modulePath(
               'lodash',
-              env === 'development' ? 'lodash.js' : 'lodash.min.js'
+              webpackUtils.NODE_ENV === 'development'
+                ? 'lodash.js'
+                : 'lodash.min.js'
             ),
             flatten: true,
           },
@@ -102,12 +108,12 @@ function commonLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
 }
 
 // A custom built library that does not contain default initialized icons
-function fabricLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
+function fabricLib(): webpack.Configuration {
   // TODO: Replace with esbuild when https://github.com/evanw/esbuild/issues/337 is resolved
   return merge(
-    webpackUtils.buildCommonConfig(env, __filename),
-    webpackUtils.buildFSCacheConfig(env, __filename),
-    webpackUtils.buildWatchConfig(env),
+    webpackUtils.buildCommonConfig(__filename),
+    webpackUtils.buildFSCacheConfig(__filename),
+    webpackUtils.buildWatchConfig(),
     {
       entry: {
         fabric: 'office-ui-fabric-react/lib/index.js',
@@ -130,8 +136,6 @@ function fabricLib(env: webpackUtils.WebpackEnv): webpack.Configuration {
   )
 }
 
-export default function config(
-  env: webpackUtils.WebpackEnv
-): webpack.Configuration[] {
-  return [commonLib(env), fabricLib(env)]
+export default function config(): webpack.Configuration[] {
+  return [commonLib(), fabricLib()]
 }
