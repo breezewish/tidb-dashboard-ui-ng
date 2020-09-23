@@ -22,7 +22,5 @@ rules:
           group: internal
         - pattern: '@core/**'
           group: internal
-        - pattern: '@ui/**'
-          group: internal
       pathGroupsExcludedImportTypes:
         - builtin

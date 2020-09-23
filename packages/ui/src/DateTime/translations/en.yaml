@@ -1,0 +1,6 @@
+sameDay: '[Today at] h:mm A'
+nextDay: '[Tomorrow] h:mm A'
+nextWeek: 'dddd h:mm A'
+lastDay: '[Yesterday] h:mm A'
+lastWeek: '[Last] dddd h:mm A'
+sameElse: lll

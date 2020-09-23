@@ -11,7 +11,7 @@
     "@tidb-dashboard/core": "^0.0.0",
     "@tidb-dashboard/shared-libraries": "^0.0.0",
     "@tidb-dashboard/ui": "^0.0.0",
-    "ahooks": "^2.6.0",
+    "ahooks": "^2.6.1",
     "antd": "^4.6.2",
     "classnames": "^2.2.6",
     "dayjs": "^1.8.35",

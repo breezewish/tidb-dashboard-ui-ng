@@ -16,8 +16,8 @@ import React, { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { useMount } from 'react-use'
 import { API, useGlobalTranslation, useServices } from '@tidb-dashboard/core'
-import { Root, AppearAnimate, LanguageDropdown } from '@tidb-dashboard/ui'
-import { useScopedTranslation } from '../app'
+import { AppearAnimate, LanguageDropdown } from '@tidb-dashboard/ui'
+import { useScopedTranslation } from '../meta'
 import * as auth from '../utils/auth'
 import styles from './SignIn.module.less'
 import Logo from './logo.svg'
@@ -346,41 +346,36 @@ function App() {
   const successRoute = '/'
 
   return (
-    <Root>
-      <div className={styles.container}>
-        <AppearAnimate
-          className={styles.contantContainer}
-          motionName="formAnimation"
-        >
-          <CSSMotion visible={alternativeVisible} motionName="fade">
-            {({ style, className }) => (
-              <AlternativeAuthForm
-                style={style}
-                className={className}
-                onClose={handleAlternativeClose}
-                onSwitchForm={handleSwitchForm}
-              />
-            )}
-          </CSSMotion>
-          {formType === DisplayFormType.tidbCredential && (
-            <TiDBSignInForm
-              successRoute={successRoute}
-              onClickAlternative={handleClickAlternative}
+    <div className={styles.container}>
+      <AppearAnimate
+        className={styles.contantContainer}
+        motionName="formAnimation"
+      >
+        <CSSMotion visible={alternativeVisible} motionName="fade">
+          {({ style, className }) => (
+            <AlternativeAuthForm
+              style={style}
+              className={className}
+              onClose={handleAlternativeClose}
+              onSwitchForm={handleSwitchForm}
             />
           )}
-          {formType === DisplayFormType.shareCode && (
-            <CodeSignInForm
-              successRoute={successRoute}
-              onClickAlternative={handleClickAlternative}
-            />
-          )}
-        </AppearAnimate>
-        <AppearAnimate
-          className={styles.landing}
-          motionName="landingAnimation"
-        />
-      </div>
-    </Root>
+        </CSSMotion>
+        {formType === DisplayFormType.tidbCredential && (
+          <TiDBSignInForm
+            successRoute={successRoute}
+            onClickAlternative={handleClickAlternative}
+          />
+        )}
+        {formType === DisplayFormType.shareCode && (
+          <CodeSignInForm
+            successRoute={successRoute}
+            onClickAlternative={handleClickAlternative}
+          />
+        )}
+      </AppearAnimate>
+      <AppearAnimate className={styles.landing} motionName="landingAnimation" />
+    </div>
   )
 }
 

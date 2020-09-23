@@ -1,17 +1,17 @@
 import React from 'react'
 import { IApp, ServicesContainer } from '@tidb-dashboard/core'
-// import SignInPage from './pages/SignIn'
+import OverviewPage from './pages/Overview'
 
 export class App implements IApp {
   getId(): string {
-    return 'built_in.overview'
+    return 'built_in.app.overview'
   }
 
   onRegister(c: ServicesContainer) {
     c.Routing.addRoutes(this, [
       {
         path: '/',
-        element: <div>Overview</div>,
+        element: <OverviewPage />,
       },
     ])
   }

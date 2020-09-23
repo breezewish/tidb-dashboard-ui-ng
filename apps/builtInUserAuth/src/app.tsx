@@ -1,29 +1,37 @@
 import React from 'react'
-import {
-  IApp,
-  ServicesContainer,
-  useScopedTranslationFactory,
-} from '@tidb-dashboard/core'
+import { IApp, Services, ServicesContainer } from '@tidb-dashboard/core'
+import { ID } from './meta'
 import SignInPage from './pages/SignIn'
 import * as auth from './utils/auth'
-
-const ID = 'built_in.user_auth'
-
-// eslint-disable-next-line
-export const useScopedTranslation = useScopedTranslationFactory(ID)
 
 export class App implements IApp {
   getId(): string {
     return ID
   }
 
-  onRegister(c: ServicesContainer) {
-    c.ApiClient.hooks.resolveApiKey.tapAsync(async () => {
-      const bearer = auth.getAuthTokenAsBearer()
-      if (bearer) {
-        return bearer
+  async resolveApiKey(): Promise<string | void> {
+    const bearer = auth.getAuthTokenAsBearer()
+    if (bearer) {
+      return bearer
+    }
+  }
+
+  async handleRouteAuthenticate(): Promise<Services.IRouteAuthenticateHookRet | void> {
+    if (!auth.getAuthTokenAsBearer()) {
+      return {
+        failAction: {
+          redirectTo: '/sign_in',
+          redirectReplace: true,
+        },
       }
-    })
+    }
+  }
+
+  onRegister(c: ServicesContainer) {
+    c.ApiClient.hooks.resolveApiKey.tapAsync(this.resolveApiKey.bind(this))
+    c.Routing.hooks.routeAuthenticate.tapAsync(
+      this.handleRouteAuthenticate.bind(this)
+    )
     c.Routing.addRoutes(this, [
       {
         path: '/sign_in',
@@ -33,19 +41,11 @@ export class App implements IApp {
         },
       },
     ])
-    c.Routing.hooks.routeAuthenticate.tapAsync(async () => {
-      return {
-        failAction: {
-          redirectTo: '/sign_in',
-          redirectReplace: true,
-        },
-      }
-    })
-    c.I18N.addScopedTranslationsBundle(
-      this,
+    Services.I18NService.addScopedTranslationsBundle(
+      ID,
       require.context('../translations/', false, /\.yaml$/)
     )
-    c.I18N.addGlobalTranslationsBundle(
+    Services.I18NService.addGlobalTranslationsBundle(
       require.context('../translationsGlobal/', false, /\.yaml$/)
     )
   }

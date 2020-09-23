@@ -11,11 +11,15 @@ async function main() {
   NProgress.configure({
     showSpinner: false,
   })
-  await loadApps(ServicesContainer.DefaultServicesContainer)
+  await loadApps(new ServicesContainer())
 }
 
 async function loadApps(container: ServicesContainer) {
-  const mockAppsList = ['builtInUserAuth', 'builtInOverview']
+  const mockAppsList = [
+    'builtInConfigPortal',
+    'builtInUserAuth',
+    'builtInOverview',
+  ]
   const mockAppLoadPattern = '/dashboard/static/apps/{appPath}/build/index.js'
 
   for (const appPathSegment of mockAppsList) {

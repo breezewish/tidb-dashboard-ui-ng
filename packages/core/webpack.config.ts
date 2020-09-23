@@ -1,3 +1,4 @@
+import path from 'path'
 import webpack from 'webpack'
 import ManifestPlugin from 'webpack-manifest-plugin'
 import { merge } from 'webpack-merge'
@@ -10,6 +11,11 @@ export default function config(): webpack.Configuration {
     // webpackUtils.buildFSCacheConfig(__filename),
     webpackUtils.buildWatchConfig(),
     {
+      resolve: {
+        alias: {
+          '@core': path.resolve(__dirname, './src'),
+        },
+      },
       entry: {
         core: './src',
       },

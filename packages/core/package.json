@@ -9,6 +9,7 @@
   "dependencies": {
     "@tidb-dashboard/api": "^0.0.0",
     "@tidb-dashboard/shared-libraries": "^0.0.0",
+    "ahooks": "^2.6.1",
     "antd": "^4.6.2",
     "dayjs": "^1.8.35",
     "history": "^5.0.0",
@@ -21,6 +22,7 @@
     "react-i18next": "^11.7.2",
     "react-router": "^6.0.0-beta.0",
     "react-router-dom": "^6.0.0-beta.0",
+    "sql-formatter-plus-plus": "^1.4.0",
     "systemjs": "^6.5.1"
   },
   "devDependencies": {

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { PartialRouteObject } from 'react-router'
 import { useRoutes } from 'react-router-dom'
 import { HashRouter } from 'react-router-dom'
-import { useServices, ServicesContainer } from '@tidb-dashboard/core'
+import { useServices, ServicesContainer, Services } from '@tidb-dashboard/core'
 
 function Router() {
   const services = useServices()
@@ -36,12 +36,12 @@ export function App({ container }: IAppProps) {
   })
 
   return (
-    <ServicesContainer.Provider container={container}>
+    <Services.ContainerProvider container={container}>
       <HashRouter>
         <Alert.ErrorBoundary>
           <Router />
         </Alert.ErrorBoundary>
       </HashRouter>
-    </ServicesContainer.Provider>
+    </Services.ContainerProvider>
   )
 }

@@ -1,0 +1,10 @@
+placeholder: 选择实例
+filterPlaceholder: 过滤实例
+selected:
+  all: 所有实例
+  partial:
+    n: '{{n}} {{component}}'
+    all: '所有 {{component}}'
+columns:
+  key: 实例
+  status: 状态

@@ -19,10 +19,6 @@ export default function sharedConfig(
     },
     resolve: {
       extensions: ['.js', '.json', '.ts', '.tsx', '.js', '.jsx'],
-      alias: {
-        '@core': path.resolve(utils.ROOT_DIR, 'packages/core/src'),
-        '@ui': path.resolve(utils.ROOT_DIR, 'packages/ui/src'),
-      },
     },
     module: {
       rules: [

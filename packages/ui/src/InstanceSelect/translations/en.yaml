@@ -1,0 +1,10 @@
+placeholder: Select Instances
+filterPlaceholder: Filter instance
+selected:
+  all: All Instances
+  partial:
+    n: '{{n}} {{component}}'
+    all: 'All {{component}}'
+columns:
+  key: Instance
+  status: Status

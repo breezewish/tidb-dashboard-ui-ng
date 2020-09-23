@@ -1,0 +1,28 @@
+{
+  "name": "@tidb-dashboard/built-in-config-portal",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Breezewish <me@breeswish.org>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@tidb-dashboard/core": "^0.0.0",
+    "@tidb-dashboard/shared-libraries": "^0.0.0",
+    "@tidb-dashboard/ui": "^0.0.0",
+    "ahooks": "^2.6.1",
+    "history": "^5.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router": "^6.0.0-beta.0",
+    "react-router-dom": "^6.0.0-beta.0"
+  },
+  "devDependencies": {
+    "@tidb-dashboard/build-scripts": "^0.0.0"
+  },
+  "scripts": {
+    "dev:bundle": "../../scripts/tasks/devBundle.sh",
+    "dev:check:ts": "../../scripts/tasks/checkTypeScriptWatch.sh",
+    "dev:check:lint": "../../scripts/tasks/checkEslintWatch.sh",
+    "dev:check": "run-p -s dev:check:**"
+  }
+}

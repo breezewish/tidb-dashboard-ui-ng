@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 import { Navigate } from 'react-router-dom'
 import type { IApp } from '@core/services/AppRegistry'
 import { BaseService } from '@core/services/Base'
-import { useServices } from '@core/services/Container'
+import { useServices } from '@core/services/ContainerContext'
 import { AsyncSeriesBailHook, AsyncParallelHook } from '@core/tap'
 
 export interface RouteMetadata extends Record<string, any> {

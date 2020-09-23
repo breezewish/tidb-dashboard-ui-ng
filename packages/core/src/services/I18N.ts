@@ -1,71 +1,68 @@
-import i18next, { i18n } from 'i18next'
+import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import { useTranslation, UseTranslationOptions } from 'react-i18next'
-import type { IApp } from '@core/services/AppRegistry'
+import { useMemo } from 'react'
 import { BaseService } from '@core/services/Base'
 import type { ServicesContainer } from '@core/services/Container'
+import { useServices } from '@core/services/ContainerContext'
+
+import 'dayjs/locale/en'
+import 'dayjs/locale/zh-cn'
+
+const SUPPORTED_LANGUAGES = { 'zh-CN': '简体中文', en: 'English' }
+const DEFAULT_LANGUAGE = 'en'
+
+i18next.use(LanguageDetector).init({
+  resources: {},
+  fallbackLng: DEFAULT_LANGUAGE,
+  whitelist: Object.keys(SUPPORTED_LANGUAGES),
+  interpolation: {
+    escapeValue: false,
+  },
+})
 
 export class I18NService extends BaseService {
-  private _i18nextInstance: i18n
+  public static SUPPORTED_LANGUAGES = SUPPORTED_LANGUAGES
+  public static DEFAULT_LANGUAGE = DEFAULT_LANGUAGE
 
-  public static SUPPORTED_LANGUAGES = { 'zh-CN': '简体中文', en: 'English' }
+  private _language: string
+
+  public set language(lang: string) {
+    this.language = lang
+  }
+
+  public get language(): string {
+    return this._language
+  }
 
   public constructor(container: ServicesContainer) {
     super(container)
-    this._i18nextInstance = i18next.createInstance()
-    this._i18nextInstance.use(LanguageDetector).init({
-      resources: {},
-      fallbackLng: 'en',
-      supportedLngs: Object.keys(I18NService.SUPPORTED_LANGUAGES),
-      interpolation: {
-        escapeValue: false,
-      },
-    })
+    this._language = i18next.languages[0]
   }
 
-  public get i18nextInstance(): i18n {
-    return this._i18nextInstance
+  public static buildScopedNamespace(scope: string): string {
+    return `scope.${scope}`
   }
 
-  private static buildScopedNamespace(appId: string): string {
-    return `app:${appId}`
-  }
-
-  private static buildGlobalNamespace(): string {
+  public static buildGlobalNamespace(): string {
     return `global`
   }
 
-  public static useGlobalTranslation(options?: UseTranslationOptions) {
-    // eslint-disable-next-line
-    return useTranslation(I18NService.buildGlobalNamespace(), options)
-  }
-
-  public static useScopedTranslationFactory(sourceAppId: string) {
-    function useScopedTranslation(options?: UseTranslationOptions) {
-      return useTranslation(
-        I18NService.buildScopedNamespace(sourceAppId),
-        options
-      )
-    }
-    return useScopedTranslation
-  }
-
-  public addScopedTranslations(
-    sourceApp: IApp,
+  public static addScopedTranslations(
+    scope: string,
     lang: string,
     translations: any
   ) {
-    this._i18nextInstance.addResourceBundle(
+    i18next.addResourceBundle(
       lang,
-      I18NService.buildScopedNamespace(sourceApp.getId()),
+      I18NService.buildScopedNamespace(scope),
       translations,
       true,
       false
     )
   }
 
-  public addGlobalTranslations(lang: string, translations: any) {
-    this._i18nextInstance.addResourceBundle(
+  public static addGlobalTranslations(lang: string, translations: any) {
+    i18next.addResourceBundle(
       lang,
       I18NService.buildGlobalNamespace(),
       translations,
@@ -74,7 +71,7 @@ export class I18NService extends BaseService {
     )
   }
 
-  private iterateBundle(
+  private static iterateBundle(
     bundleContext: __WebpackModuleApi.RequireContext,
     iteratee: (lang: string, translations: any) => void
   ) {
@@ -90,20 +87,39 @@ export class I18NService extends BaseService {
     })
   }
 
-  public addScopedTranslationsBundle(
-    sourceApp: IApp,
+  public static addScopedTranslationsBundle(
+    scope: string,
     bundleContext: __WebpackModuleApi.RequireContext
   ) {
-    this.iterateBundle(bundleContext, (lang, translations) => {
-      this.addScopedTranslations(sourceApp, lang, translations)
+    I18NService.iterateBundle(bundleContext, (lang, translations) => {
+      I18NService.addScopedTranslations(scope, lang, translations)
     })
   }
 
-  public addGlobalTranslationsBundle(
+  public static addGlobalTranslationsBundle(
     bundleContext: __WebpackModuleApi.RequireContext
   ) {
-    this.iterateBundle(bundleContext, (lang, translations) => {
-      this.addGlobalTranslations(lang, translations)
+    I18NService.iterateBundle(bundleContext, (lang, translations) => {
+      I18NService.addGlobalTranslations(lang, translations)
     })
   }
+}
+
+function useTranslation(namespace: string) {
+  const { I18N } = useServices()
+  const retObj = useMemo(() => {
+    return {
+      t: i18next.getFixedT(I18N.language, namespace),
+    }
+  }, [namespace, I18N.language])
+
+  return retObj
+}
+
+export function useGlobalTranslation() {
+  return useTranslation(I18NService.buildGlobalNamespace())
+}
+
+export function buildUseScopedTranslation(scope: string) {
+  return () => useTranslation(I18NService.buildScopedNamespace(scope))
 }

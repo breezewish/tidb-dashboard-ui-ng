@@ -18,5 +18,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "experimentalDecorators": true
+  },
+  "watchOptions": {
+    "watchFile": "UseFsEventsOnParentDirectory"
   }
 }
