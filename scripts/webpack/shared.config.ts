@@ -75,8 +75,7 @@ export default function sharedConfig(
               loader: require.resolve('esbuild-loader'),
               options: {
                 loader: 'tsx',
-                // FIXME: Change to es2015 after https://github.com/evanw/esbuild/issues/388 is fixed
-                target: 'es2017',
+                target: 'es2015',
               },
             },
             {

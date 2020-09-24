@@ -6,11 +6,11 @@
   "author": "Breezewish <me@breeswish.org>",
   "license": "MIT",
   "dependencies": {
-    "antd": "^4.6.2",
-    "dayjs": "^1.8.35",
+    "antd": "^4.6.5",
+    "dayjs": "^1.8.36",
     "history": "^5.0.0",
     "lodash": "^4.17.20",
-    "office-ui-fabric-react": "^7.134.3",
+    "office-ui-fabric-react": "^7.140.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router": "^6.0.0-beta.0",
@@ -22,7 +22,7 @@
     "@types/lodash": "^4.14.161",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
-    "copy-webpack-plugin": "^6.1.0"
+    "copy-webpack-plugin": "^6.1.1"
   },
   "scripts": {
     "dev:bundle": "../../scripts/tasks/devBundle.sh"
