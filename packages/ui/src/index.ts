@@ -1,6 +1,3 @@
-export * from './Layout'
-export { default as Layout } from './Layout'
-
 export * from './Head'
 export { default as Head } from './Head'
 export * from './Card'

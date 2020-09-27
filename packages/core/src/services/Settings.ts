@@ -3,7 +3,7 @@ import type { ServicesContainer } from '@core/services/Container'
 
 const KEY = 'tidb_dashboard.settings'
 
-export class SettingsService extends BaseService {
+export class Settings extends BaseService {
   private _settings: Record<string, any> = {}
 
   public constructor(container: ServicesContainer) {

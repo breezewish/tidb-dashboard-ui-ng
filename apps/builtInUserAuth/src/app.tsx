@@ -36,16 +36,14 @@ export class App implements IApp {
       {
         path: '/sign_in',
         element: <SignInPage />,
-        metadata: {
-          skipAuthentication: true,
-        },
+        skipAuthentication: true,
       },
     ])
-    Services.I18NService.addScopedTranslationsBundle(
+    Services.I18N.addScopedTranslationsBundle(
       ID,
       require.context('../translations/', false, /\.yaml$/)
     )
-    Services.I18NService.addGlobalTranslationsBundle(
+    Services.I18N.addGlobalTranslationsBundle(
       require.context('../translationsGlobal/', false, /\.yaml$/)
     )
   }

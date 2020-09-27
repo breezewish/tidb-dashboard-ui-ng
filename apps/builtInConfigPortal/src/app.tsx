@@ -16,9 +16,7 @@ export class App implements IApp {
       {
         path: '/portal',
         element: <ConfigPortalPage />,
-        metadata: {
-          skipAuthentication: true,
-        },
+        skipAuthentication: true,
       },
     ])
   }

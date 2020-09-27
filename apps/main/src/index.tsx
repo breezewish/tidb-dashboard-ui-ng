@@ -16,6 +16,7 @@ async function main() {
 
 async function loadApps(container: ServicesContainer) {
   const mockAppsList = [
+    'builtInLayoutMain',
     'builtInConfigPortal',
     'builtInUserAuth',
     'builtInOverview',

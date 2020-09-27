@@ -1,8 +1,9 @@
 import { useLocalStorageState } from 'ahooks'
 import React, { useState, useCallback, useEffect } from 'react'
+import { Outlet } from 'react-router-dom'
 import { useSpring, animated } from 'react-spring'
+import styles from './Layout.module.less'
 import Sider from './Sider'
-import styles from './index.module.less'
 
 const siderWidth = 260
 const siderCollapsedWidth = 80
@@ -38,7 +39,7 @@ const useContentLeftOffset = (collapsed) => {
   }
 }
 
-export default function App({ children }) {
+export default function App(): JSX.Element {
   const [collapsed, setCollapsed] = useLocalStorageState(
     'layout.sider.collapsed',
     false
@@ -71,13 +72,11 @@ export default function App({ children }) {
       {/* {!appOptions.hideNav && ( */}
       {/* <> */}
       <Sider
-        // registry={registry}
         fullWidth={siderWidth}
         onToggle={handleToggle}
         defaultCollapsed={defaultCollapsed}
         collapsed={collapsed}
         collapsedWidth={siderCollapsedWidth}
-        animationDelay={0}
       />
       <animated.div
         className={styles.contentBack}
@@ -100,7 +99,7 @@ export default function App({ children }) {
           }
         }
       >
-        {children}
+        <Outlet />
       </div>
     </animated.div>
   )

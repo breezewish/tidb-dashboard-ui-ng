@@ -13,7 +13,7 @@ function LanguageDropdown({ children }: { children: ReactNode }) {
 
   const menu = (
     <Menu onClick={handleClick} /*selectedKeys={[i18n.language]}*/>
-      {_.map(Services.I18NService.SUPPORTED_LANGUAGES, (name, key) => {
+      {_.map(Services.I18N.SUPPORTED_LANGUAGES, (name, key) => {
         return <Menu.Item key={key}>{name}</Menu.Item>
       })}
     </Menu>

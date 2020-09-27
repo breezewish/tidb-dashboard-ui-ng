@@ -6,6 +6,7 @@
   "license": "MIT",
   "main": "dist/index.js",
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
     "@tidb-dashboard/core": "^0.0.0",
     "@tidb-dashboard/shared-libraries": "^0.0.0",
     "@tidb-dashboard/ui": "^0.0.0",

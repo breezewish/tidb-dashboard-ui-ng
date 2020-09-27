@@ -11,7 +11,7 @@ export type ApiClientServiceHooks = {
   resolveApiKey: AsyncSeriesBailHook<void, string>
 }
 
-export class ApiClientService extends BaseService {
+export class ApiClient extends BaseService {
   public hooks: ApiClientServiceHooks = {
     resolveApiKey: new AsyncSeriesBailHook(),
   }

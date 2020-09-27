@@ -20,7 +20,7 @@ i18next.use(LanguageDetector).init({
   },
 })
 
-export class I18NService extends BaseService {
+export class I18N extends BaseService {
   public static SUPPORTED_LANGUAGES = SUPPORTED_LANGUAGES
   public static DEFAULT_LANGUAGE = DEFAULT_LANGUAGE
 
@@ -54,7 +54,7 @@ export class I18NService extends BaseService {
   ) {
     i18next.addResourceBundle(
       lang,
-      I18NService.buildScopedNamespace(scope),
+      I18N.buildScopedNamespace(scope),
       translations,
       true,
       false
@@ -64,7 +64,7 @@ export class I18NService extends BaseService {
   public static addGlobalTranslations(lang: string, translations: any) {
     i18next.addResourceBundle(
       lang,
-      I18NService.buildGlobalNamespace(),
+      I18N.buildGlobalNamespace(),
       translations,
       true,
       false
@@ -91,16 +91,16 @@ export class I18NService extends BaseService {
     scope: string,
     bundleContext: __WebpackModuleApi.RequireContext
   ) {
-    I18NService.iterateBundle(bundleContext, (lang, translations) => {
-      I18NService.addScopedTranslations(scope, lang, translations)
+    I18N.iterateBundle(bundleContext, (lang, translations) => {
+      I18N.addScopedTranslations(scope, lang, translations)
     })
   }
 
   public static addGlobalTranslationsBundle(
     bundleContext: __WebpackModuleApi.RequireContext
   ) {
-    I18NService.iterateBundle(bundleContext, (lang, translations) => {
-      I18NService.addGlobalTranslations(lang, translations)
+    I18N.iterateBundle(bundleContext, (lang, translations) => {
+      I18N.addGlobalTranslations(lang, translations)
     })
   }
 }
@@ -117,9 +117,9 @@ function useTranslation(namespace: string) {
 }
 
 export function useGlobalTranslation() {
-  return useTranslation(I18NService.buildGlobalNamespace())
+  return useTranslation(I18N.buildGlobalNamespace())
 }
 
 export function buildUseScopedTranslation(scope: string) {
-  return () => useTranslation(I18NService.buildScopedNamespace(scope))
+  return () => useTranslation(I18N.buildScopedNamespace(scope))
 }

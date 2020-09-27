@@ -5,8 +5,6 @@ import { AsyncParallelHook } from '@core/tap'
 export interface IApp {
   getId(): string
   onRegister?: (container: ServicesContainer) => void
-  // getTranslations?: () => __WebpackModuleApi.RequireContext
-  // getRoutes?: () => PartialRouteObject[]
 }
 
 export type AppRegistryServiceHooks = {
@@ -16,7 +14,7 @@ export type AppRegistryServiceHooks = {
   appRegistered: AsyncParallelHook<IApp>
 }
 
-export class AppRegistryService extends BaseService {
+export class AppRegistry extends BaseService {
   public hooks: AppRegistryServiceHooks = {
     appRegistered: new AsyncParallelHook(),
   }
@@ -26,17 +24,13 @@ export class AppRegistryService extends BaseService {
   /**
    * Register an app.
    */
-  public async register(app: IApp): Promise<AppRegistryService> {
+  public async register(app: IApp): Promise<AppRegistry> {
     const id = app.getId()
     if (id in this._apps) {
       return this
     }
 
     app.onRegister?.(this.parentContainer)
-
-    // if (app.getTranslations) {
-    //   addTranslations(app.getTranslations())
-    // }
 
     this._apps[id] = app
     await this.hooks.appRegistered.invokeAsync(app)
